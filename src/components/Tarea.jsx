@@ -46,7 +46,6 @@ const Tarea = ({ tarea }) => {
           </button>
         )}
 
-
         <button 
           className={ `${estado ? 'bg-sky-600' : 'bg-gray-600'} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg `}            
           onClick={() => completarTarea(_id)}

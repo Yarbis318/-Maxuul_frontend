@@ -8,10 +8,12 @@ const FormularioServicio = () => {
   const [nombre, setNombre] = useState("")
   const [fecha, setFecha] = useState("")
   const [dias, setDias] = useState("")
+  const [numCisternas, setNumCisternas] = useState("")
   const [documentacion, setDocumentacion] = useState("")
   const [requisitosEquipo, setRequisitosEquipo] = useState("")
   const [epp, setEpp] = useState("")
   const [fechaUltimoServ, setFechaUltimoServ] = useState("")
+  const [puntosInspeccion, setPuntosInspeccion] = useState("")
   const [observaciones, setObservaciones] = useState("")
 
   const params = useParams()
@@ -24,11 +26,12 @@ const FormularioServicio = () => {
       setNombre(servicio.nombre)
       setFecha(servicio.fecha?.split('T')[0])
       setDias(servicio.dias)
-      setCliente(servicio.cliente)
+      setNumCisternas(servicio.numCisternas)
       setDocumentacion(servicio.documentacion)
       setRequisitosEquipo(servicio.requisitosEquipo)
       setEpp(servicio.epp)
       setFechaUltimoServ(servicio.fechaUltimoServ)
+      setPuntosInspeccion(servicio.puntosInspeccion)
       setObservaciones(servicio.observaciones)
     }
   }, [params])
@@ -37,7 +40,7 @@ const FormularioServicio = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([nombre, fecha, dias, documentacion, requisitosEquipo, epp, fechaUltimoServ, observaciones].includes("")) {
+    if ([nombre, fecha, dias, numCisternas, documentacion, requisitosEquipo, epp, fechaUltimoServ, puntosInspeccion, observaciones].includes("")) {
       mostrarAlerta({
         msg: "Todos los Campos son Obligatorios",
         error: true,
@@ -47,16 +50,18 @@ const FormularioServicio = () => {
     }
 
     // Pasar los datos hacia provider
-    await submitServicio({ id, nombre, fecha, dias, documentacion, requisitosEquipo, epp, fechaUltimoServ, observaciones })
+    await submitServicio({ id, nombre, fecha, dias, numCisternas, documentacion, requisitosEquipo, epp, fechaUltimoServ,puntosInspeccion, observaciones })
 
     setId(null)
     setNombre('')
     setFecha('')
     setDias('')
+    setNumCisternas('')
     setDocumentacion('')
     setRequisitosEquipo('')
     setEpp('')
     setFechaUltimoServ('')
+    setPuntosInspeccion('')
     setObservaciones('')
   };
 
@@ -115,6 +120,22 @@ const FormularioServicio = () => {
           className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
           value={dias}
           onChange={(e) => setDias(e.target.value)}
+        />
+      </div>
+
+      <div className="mb-5">
+        <label
+          className="text-gray-700 uppercase font-bold text-sm"
+          htmlFor="numCisternas"
+        >
+          Numero de cisternas
+        </label>
+        <input
+          id="numCisternas"
+          type="number"
+          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          value={numCisternas}
+          onChange={(e) => setNumCisternas(e.target.value)}
         />
       </div>
 
@@ -183,6 +204,23 @@ const FormularioServicio = () => {
           placeholder="Espesifique el ultimo servicio realizado"
           value={fechaUltimoServ}
           onChange={(e) => setFechaUltimoServ(e.target.value)}
+        />
+      </div>
+
+      <div className="mb-5">
+        <label
+          className="text-gray-700 uppercase font-bold text-sm"
+          htmlFor="puntosInpeccion"
+        >
+          Puntos importantes a inspeccionar
+        </label>
+        <input
+          id="puntosInspeccion"
+          type="text"
+          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          placeholder="Puntos importantes a inspeccionar"
+          value={puntosInspeccion}
+          onChange={(e) => setPuntosInspeccion(e.target.value)}
         />
       </div>
 

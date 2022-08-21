@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom"
 import useServicios from "../hooks/useServicios"
-//import PreviewServicio from "../components/PreviewServicio"
-//import Alerta from "../components/Alerta"
+import PreviewServicio from "../components/PreviewServicio"
+import Alerta from "../components/Alerta"
 
 const Servicios = () => {
-  const { servicios } = useServicios()
+  const { servicios, alerta } = useServicios()
+  const { msg } = alerta
 
   return (
     <>
 
       <Link
+        type='button'
         to="crear-servicio"
         className="bg-sky-600 w-full p-3 text-white uppercase font-bold block mt-5 text-center rounded-lg"
       >
@@ -18,7 +20,7 @@ const Servicios = () => {
 
       <h1 className="text-4xl font-black">Servicios</h1>
 
-      {/*{msg && <Alerta alerta={alerta} />}
+      {msg && <Alerta alerta={alerta} />}
 
       <div className="bg-white shadow mt-10 rounded-lg p-5">
         {servicios.length ? (
@@ -30,7 +32,7 @@ const Servicios = () => {
             No hay Servicios
           </p>
         )}
-        </div>*/}
+        </div>
     </>
   )
 }

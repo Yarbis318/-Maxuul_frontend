@@ -15,8 +15,8 @@ import EditarProyecto from "./paginas/EditarProyecto";
 import NuevoColaborador from "./paginas/NuevoColaborador";
 import Servicios from "./paginas/Servicios"
 import NuevoServicio from "./paginas/NuevoServicio";
-//import Servicio from "./paginas/Servicio";
-//import EditarServicio from "./paginas/EditarServicio"
+import Servicio from "./paginas/Servicio";
+import EditarServicio from "./paginas/EditarServicio"
 
 import { AuthProvider } from "./context/AuthProvider";
 import { ProyectosProvider } from "./context/ProyectosProvider";
@@ -54,6 +54,8 @@ function App() {
             <Route path="/servicios" element={<RutaProtegida />}>
               <Route index element={<Servicios />}/>
               <Route path="crear-servicio" element={<NuevoServicio />} />
+              <Route path=":id" element={<Servicio />} />
+              <Route path="editar/:id" element={<EditarServicio />} />
             </Route>
           </Routes>
             </ServiciosProvider>
