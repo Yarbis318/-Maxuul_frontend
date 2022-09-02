@@ -204,7 +204,6 @@ const ProyectosProvider = ({ children }) => {
     } else {
       await crearTarea(tarea)
     }
-
   }
 
   const crearTarea = async tarea => {
@@ -267,7 +266,6 @@ const ProyectosProvider = ({ children }) => {
 
   const eliminarTarea = async () => {
     try {
-
       const token = localStorage.getItem("token")
       if (!token) return
 

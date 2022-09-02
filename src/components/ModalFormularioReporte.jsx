@@ -9,6 +9,7 @@ const ESTADO = ["Proceso", "Realizado"]
 const ModalFormularioReporte = () => {
 
   const [id, setId] = useState("")
+  const [nombreservicio, setNombreservicio] = useState("")
   const [sedimento, setSedimento] = useState("")
   const [objetos, setObjetos] = useState("")
   const [piso, setPiso] = useState("")
@@ -20,6 +21,7 @@ const ModalFormularioReporte = () => {
   const [numeroescaleras, setNumeroescaleras] = useState("")
   const [vasoscomunicantes, setVasoscomunicantes] = useState("")
   const [observaciones, setObservaciones] = useState("")
+  const [status, setStatus] = useState("")
   const [estado, setEstado] = useState("")
 
   const params = useParams()
@@ -36,6 +38,7 @@ const ModalFormularioReporte = () => {
   useEffect(() => {
     if(reporte?._id) {
       setId(reporte._id)
+      setNombreservicio(reporte.nombreservicio)
       setSedimento(reporte.sedimento)
       setObjetos(reporte.objetos)
       setPiso(reporte.piso)
@@ -47,10 +50,12 @@ const ModalFormularioReporte = () => {
       setNumeroescaleras(reporte.numeroescaleras)
       setVasoscomunicantes(reporte.vasoscomunicantes)
       setObservaciones(reporte.observaciones)
+      setStatus(reporte.status)
       setEstado(reporte.estado)
       return
     }
     setId('')
+    setNombreservicio('')
     setSedimento('')
     setObjetos('')
     setPiso('')
@@ -62,14 +67,14 @@ const ModalFormularioReporte = () => {
     setNumeroescaleras('')
     setVasoscomunicantes('')
     setObservaciones('')
+    setStatus('')
     setEstado('')
-
   }, [reporte])
   
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if([sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, estado].includes("")) {
+    if([ nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, status, estado].includes('')) {
       mostrarAlerta({
         msg: "Todos los campos son obligatorios",
         error: true,
@@ -77,9 +82,10 @@ const ModalFormularioReporte = () => {
       return
     }
 
-    await submitReporte({ id, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, estado, servicio: params.id })
+    await submitReporte({ id, nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, status, estado, servicio: params.id })
 
     setId('')
+    setNombreservicio('')
     setSedimento('')
     setObjetos('')
     setPiso('')
@@ -91,6 +97,7 @@ const ModalFormularioReporte = () => {
     setNumeroescaleras('')
     setVasoscomunicantes('')
     setObservaciones('')
+    setStatus('')
     setEstado('')
   }
 
@@ -159,7 +166,7 @@ const ModalFormularioReporte = () => {
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg leading-6 font-bold text-gray-900"
+                    className="text-lg leading-6 font-bold text-sky-600"
                   >
                     {id ? 'Editar Reporte' : 'Crear Reporte'}
                   </Dialog.Title>
@@ -170,6 +177,23 @@ const ModalFormularioReporte = () => {
                     onSubmit={handleSubmit} 
                     className="my-10"
                   >
+                    <div className="mb-5">
+                      <label
+                        className="text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="nombreservicio"
+                      >
+                        Tipo de cisterna
+                      </label>
+                      <input
+                        type="text"
+                        id="nombreservicio"
+                        placeholder="Tipo de cisterna y la celda"
+                        className="border w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={nombreservicio}
+                        onChange={(e) => setNombreservicio(e.target.value)}
+                      />
+                    </div>
+
                     <div className="mb-5">
                       <label
                         className="text-gray-700 uppercase font-bold text-sm"

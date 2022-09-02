@@ -5,7 +5,7 @@ import useAdmin from "../hooks/useAdmin";
 const Tarea = ({ tarea }) => {
   const { handleModalEditarTarea, handleModalEliminarTarea, completarTarea } = useProyectos();
 
-  const admin = useAdmin();
+  const admin = useAdmin()
 
   const {
     descripcion,

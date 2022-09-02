@@ -55,6 +55,7 @@ const Proyecto = () => {
   })
   
   const { nombre } = proyecto;
+
   if (cargando) return "Cargando...";
   const { msg } = alerta;
 

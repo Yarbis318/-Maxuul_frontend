@@ -22,7 +22,6 @@ const ServiciosProvider = ({ children }) => {
   const [buscador, setBuscador] = useState(false);
 
   const navigate = useNavigate();
-  const { auth } = useAuth();
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -44,13 +43,13 @@ const ServiciosProvider = ({ children }) => {
       }
     };
     obtenerServicios();
-  }, [auth]);
+  }, []);
 
   useEffect(() => {
     socket = io(import.meta.env.VITE_BACKEND_URL);
   }, []);
 
-  const mostrarAlerta = (alerta) => {
+  const mostrarAlerta = alerta => {
     setAlerta(alerta);
 
     setTimeout(() => {
@@ -66,7 +65,7 @@ const ServiciosProvider = ({ children }) => {
     }
   };
 
-  const editarServicio = async (servicio) => {
+  const editarServicio = async servicio => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -78,16 +77,10 @@ const ServiciosProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios.put(
-        `/servicios/${servicio.id}`,
-        servicio,
-        config
-      );
+      const { data } = await clienteAxios.put(`/servicios/${servicio.id}`, servicio, config);
 
       // Sincronizar el state
-      const serviciosActualizados = servicios.map((servicioState) =>
-        servicioState._id === data._id ? data : servicioState
-      );
+      const serviciosActualizados = servicios.map(servicioState => servicioState._id === data._id ? data : servicioState)
       setServicios(serviciosActualizados);
 
       setAlerta({
@@ -149,8 +142,17 @@ const ServiciosProvider = ({ children }) => {
 
       const { data } = await clienteAxios(`/servicios/${id}`, config )
       setServicio(data)
+      setAlerta({})
     } catch (error) {
-      console.log(error);
+      navigate('/servicios')
+
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true
+      })
+      setTimeout(() => {
+        setAlerta({})
+      }, 300)
     } finally {
       setCargando(false)
     }
@@ -171,10 +173,8 @@ const ServiciosProvider = ({ children }) => {
       const { data } = await clienteAxios.delete(`/servicios/${id}`, config);
 
       // Sincronizar el state
-      const serviciosActualizados = servicios.filter(
-        (servicioState) => servicioState._id !== id
-      );
-      setServicios(serviciosActualizados);
+      const serviciosActualizados = servicios.filter(servicioState => servicioState._id !== id)
+      setServicios(serviciosActualizados)
 
       setAlerta({
         msg: data.msg,
@@ -183,17 +183,17 @@ const ServiciosProvider = ({ children }) => {
 
       setTimeout(() => {
         setAlerta({});
-        navigate("/servicios");
-      }, 3000);
+        navigate("/servicios")
+      }, 3000)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const handleModalReporte = () => {
     setModalFormularioReporte(!modalFormularioReporte);
-    //setReporte({});
-  };
+    setReporte({})
+  }
 
   const submitReporte = async reporte => {
     if(reporte?.id) {
@@ -206,7 +206,7 @@ const ServiciosProvider = ({ children }) => {
   const crearReporte = async reporte => {
     try {
       const token = localStorage.getItem("token")
-      if (!token) return;
+      if (!token) return
 
       const config = {
         headers: {
@@ -215,7 +215,7 @@ const ServiciosProvider = ({ children }) => {
         }
       }
 
-      const { data } = await clienteAxios.post("/reportes", reporte, config);
+      const { data } = await clienteAxios.post('/reportes', reporte, config);
 
       setAlerta({})
       setModalFormularioReporte(false)
@@ -227,7 +227,7 @@ const ServiciosProvider = ({ children }) => {
     }
   };
 
-  const editarReporte = async (reporte) => {
+  const editarReporte = async reporte => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -236,33 +236,29 @@ const ServiciosProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        },
-      };
+        }
+      }
 
-      const { data } = await clienteAxios.put(
-        `/servicios/${reporte.id}`,
-        reporte,
-        config
-      );
+      const { data } = await clienteAxios.put(`/reportes/${reporte.id}`, reporte, config)
 
+      const servicioActualizado = {...servicio}
+      servicioActualizado.reportes = servicioActualizado.reportes.map( reporteState => reporteState._id ===data._id ? data : reporteState )
+      setServicio(servicioActualizado)
       setAlerta({});
       setModalFormularioReporte(false);
-
-      // SOCKET
-      socket.emit("actualizar reporte", data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
-  const handleModalEditarReporte = (reporte) => {
+  const handleModalEditarReporte = reporte => {
     setReporte(reporte);
     setModalFormularioReporte(true);
   };
 
-  const handleModalEliminarReporte = (reporte) => {
-    setReporte(reporte);
-    setModalEliminarReporte(!modalEliminarReporte);
+  const handleModalEliminarReporte = reporte => {
+    setReporte(reporte)
+    setModalEliminarReporte(!modalEliminarReporte)
   };
 
   const eliminarReporte = async () => {
@@ -277,30 +273,27 @@ const ServiciosProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios.delete(
-        `/reportes/${reporte._id}`,
-        config
-      );
+      const { data } = await clienteAxios.delete(`/reportes/${reporte._id}`, config);
       setAlerta({
         msg: data.msg,
         error: false,
-      });
+      })
+      const servicioActualizado = {...servicio}
+      servicioActualizado.reportes = servicioActualizado.reportes.filter(reporteState => reporteState._id !== reporte._id)
 
+      setServicio(servicioActualizado)
       setModalEliminarReporte(false);
-
-      // SOCKET
-      socket.emit("eliminar reporte", reporte);
-
-      setReporte({});
+      setReporte({})
       setTimeout(() => {
-        setAlerta({});
-      }, 3000);
+        setAlerta({})
+      }, 3000)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
 
-  const submitColaborador = async (email) => {
+  const submitColaborador = async email => {
+
     setCargando(true);
     try {
       const token = localStorage.getItem("token");
@@ -309,15 +302,11 @@ const ServiciosProvider = ({ children }) => {
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer #{token}`,
-        },
-      };
+          Authorization: `Bearer #{token}`
+        }
+      }
 
-      const { data } = await clienteAxios.post(
-        "/servicios/reportes",
-        { email },
-        config
-      );
+      const { data } = await clienteAxios.post("/servicios/colaboradores", { email }, config)
 
       setColaborador(data);
       setAlerta({});
@@ -331,27 +320,25 @@ const ServiciosProvider = ({ children }) => {
     }
   };
 
-  const agregarColaborador = async (email) => {
+  const agregarColaborador = async email => {
+
     try {
+
       const token = localStorage.getItem("token");
       if (!token) return;
 
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await clienteAxios.post(
-        `/servicios/colaboradores/${servicio._id}`,
-        email,
-        config
-      );
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const { data } = await clienteAxios.post(`/servicios/colaboradores/${servicio._id}`, email, config)
 
       setAlerta({
         msg: data.msg,
         error: false,
-      });
+      })
       setColaborador({});
 
       setTimeout(() => {
@@ -361,9 +348,9 @@ const ServiciosProvider = ({ children }) => {
       setAlerta({
         msg: error.response.data.msg,
         error: true,
-      });
+      })
     }
-  };
+  }
 
   const handleModalEliminarColaborador = (colaborador) => {
     setModalEliminarColaborador(!modalEliminarColaborador);
@@ -372,32 +359,28 @@ const ServiciosProvider = ({ children }) => {
 
   const eliminarColaborador = async () => {
     try {
+      const token = localStorage.getItem('token')
+      if(!token) return
+
       const config = {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await clienteAxios.post(
-        `/servicios/eliminarColaborador/${servicio._id}`,
-        { id: colaborador._id },
-        config
-      );
+        }
+      }
+      const { data } = await clienteAxios.post(`/servicios/eliminarColaborador/${servicio._id}`, { id: colaborador._id }, config)
 
       const servicioActualizado = { ...servicio };
 
-      servicioActualizado.colaboradores =
-        servicioActualizado.colaboradores.filter(
-          (colaboradorState) => colaboradorState._id !== colaborador._id
-        );
+      servicioActualizado.colaboradores = servicioActualizado.colaboradores.filter(colaboradorState => colaboradorState._id !== colaborador._id);
 
       setServicio(servicioActualizado);
       setAlerta({
         msg: data.msg,
         error: false,
       });
-      setColaborador({});
-      setModalEliminarColaborador(false);
+      setColaborador({})
+      setModalEliminarColaborador(false)
 
       setTimeout(() => {
         setAlerta({});
@@ -405,9 +388,9 @@ const ServiciosProvider = ({ children }) => {
     } catch (error) {
       console.log(error.response);
     }
-  };
+  }
 
-  const completarReporte = async (id) => {
+  const completarReporte = async id => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -418,18 +401,18 @@ const ServiciosProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const { data } = await clienteAxios.post(
-        `/reporte/completar/${id}`,
-        {},
-        config
-      );
+      const { data } = await clienteAxios.post(`/reportes/estado/${id}`, {}, config)
+
+      const servicioActualizado = {...servicio}
+
+      servicioActualizado.reportes = servicioActualizado.reportes.map(reporteState => reporteState._id === data._id ? data : reporteState)
+
+      setServicio(servicioActualizado)
       setReporte({});
       setAlerta({});
 
-      // socket
-      socket.emit("cambiar estado", data);
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response)
     }
   };
 
@@ -440,36 +423,37 @@ const ServiciosProvider = ({ children }) => {
   // Socket io
   
   const submitReportesServicio = (reporte) => {
+    //Agregar el reporte al state
     const servicioActualizado = { ...servicio };
     servicioActualizado.reportes = [...servicioActualizado.reportes, reporte];
     setReporte(reporteActualizado);
   };
 
-  const eliminarReporteServicio = (reporte) => {
-    const servicioActualizado = { ...servicio };
-    servicioActualizado.reportes = servicioActualizado.reportes.filter(
-      (reporteState) => reporteState._id !== reporte._id
-    );
-    setServicio(servicioActualizado);
-  };
+  //const eliminarReporteServicio = (reporte) => {
+    //const servicioActualizado = { ...servicio };
+    //servicioActualizado.reportes = servicioActualizado.reportes.filter(
+      //(reporteState) => reporteState._id !== reporte._id
+    //);
+    //setServicio(servicioActualizado);
+  //};
 
-  const actualizarReporteServicio = (reporte) => {
-    const servicioActualizado = { ...servicio };
-    servicioActualizado.reportes = servicioActualizado.reportes.map(
-      (reporteState) =>
-        reporteState._id === reporte._id ? reporte : reporteState
-    );
-    setServicio(servicioActualizado);
-  };
+  //const actualizarReporteServicio = (reporte) => {
+    //const servicioActualizado = { ...servicio };
+    //servicioActualizado.reportes = servicioActualizado.reportes.map(
+      //(reporteState) =>
+        //reporteState._id === reporte._id ? reporte : reporteState
+    //);
+    //setServicio(servicioActualizado);
+  //};
 
-  const cambiarEstadoReporte = (reporte) => {
-    const servicioActualizado = { ...servicio };
-    servicioActualizado.reportes = servicioActualizado.reportes.map(
-      (reporteState) =>
-        reporteState._id === reporte._id ? reporte : reporteState
-    );
-    setServicio(servicioActualizado);
-  };
+  //const cambiarEstadoReporte = (reporte) => {
+    //const servicioActualizado = { ...servicio };
+    //servicioActualizado.reportes = servicioActualizado.reportes.map(
+      //(reporteState) =>
+        //reporteState._id === reporte._id ? reporte : reporteState
+    //);
+    //setServicio(servicioActualizado);
+  //};
 
   return (
     <ServiciosContext.Provider
@@ -486,19 +470,21 @@ const ServiciosProvider = ({ children }) => {
         handleModalReporte,
         submitReporte,
         handleModalEditarReporte,
+        reporte,
         handleModalEliminarReporte,
         eliminarReporte,
         submitColaborador,
         agregarColaborador,
+        modalEliminarReporte,
         handleModalEliminarColaborador,
         eliminarColaborador,
         completarReporte,
         buscador,
         handleBuscador,
         submitReportesServicio,
-        eliminarReporteServicio,
-        actualizarReporteServicio,
-        cambiarEstadoReporte
+        //eliminarReporteServicio,
+        //actualizarReporteServicio,
+        //cambiarEstadoReporte
       }}
     >
       {children}

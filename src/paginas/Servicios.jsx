@@ -5,6 +5,9 @@ import Alerta from "../components/Alerta"
 
 const Servicios = () => {
   const { servicios, alerta } = useServicios()
+
+  console.log(servicios)
+
   const { msg } = alerta
 
   return (

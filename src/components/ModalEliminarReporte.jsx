@@ -89,7 +89,7 @@ const ModalEliminarReporte = () => {
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Una reporte eliminado no se podrá recuperar
+                      Un reporte eliminado no se podrá recuperar
                     </p>
                   </div>
                 </div>
