@@ -1,15 +1,30 @@
 import { Link } from "react-router-dom"
 import useProyectos from '../hooks/useProyectos'
+import useAuth from '../hooks/useAuth'
 import Busqueda from "./Busqueda"
+
+import Logo from '../assets/img/MaxuulBlanco.png'
 
 const Header = () => {
 
-  const {handleBuscador} = useProyectos()
+  const {handleBuscador, cerrarSesionProyectos} = useProyectos()
+  const { cerrarSesionAuth } = useAuth()
+
+  const handleCerrarSesion = () => {
+    cerrarSesionAuth()
+    cerrarSesionProyectos()
+    localStorage.removeItem('token')
+  }
 
   return (
     <header className="px-4 py-5 bg-white border-b">
       <div className="md:flex md:justify-between">
-        <h2 className="text-4xl text-sky-600 font-black text-center mb-5 md:mb-0">TsooL</h2>
+        <img 
+          src={Logo}
+          alt="Logo Maxuul"
+          className="w-1/4 h-1/3"
+          loading="lazy"
+        />
 
         <div className="flex flex-col md:flex-row items-center gap-4">
           <button
@@ -25,7 +40,15 @@ const Header = () => {
             Servicios
           </Link>
 
-          <button type="button" className="text-white text-sm bg-sky-600 p-3 rounded-md uppercase font-bold">Cerrar Sesión</button>
+          {/*<Link to="/calendario" className="font-bold uppercase">
+            Calendario
+          </Link>*/}
+
+          <button 
+            type="button" 
+            className="text-white text-sm bg-green-600 p-3 rounded-md uppercase font-bold"
+            onClick={handleCerrarSesion}
+          >Cerrar Sesión</button>
 
           <Busqueda />
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from "react-router-dom"
 import Alerta from '../components/Alerta'
 import clienteAxios from '../config/clienteAxios'
+import Logotipo from '../components/Logo'
 
 const OlvidePassword = () => {
 
@@ -40,9 +41,9 @@ const OlvidePassword = () => {
 
   return (
     <>
-      <h1 className="text-sky-600 font-black text-6xl capitalize">
+      <h1 className="text-green-600 font-extralight text-6xl capitalize">
         Recupera tu acceso en{""}
-        <span className="text-slate-700"> TsooL</span>
+        <Logotipo />
       </h1>
 
       { msg && <Alerta alerta={alerta} /> }

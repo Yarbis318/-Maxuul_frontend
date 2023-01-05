@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
+import useAuth from '../hooks/useAuth'
 import io from "socket.io-client";
 
 let socket
@@ -8,6 +9,7 @@ let socket
 const ProyectosContext = createContext();
 
 const ProyectosProvider = ({ children }) => {
+  
   const [proyectos, setProyectos] = useState([]);
   const [alerta, setAlerta] = useState({});
   const [proyecto, setProyecto] = useState({});
@@ -20,6 +22,7 @@ const ProyectosProvider = ({ children }) => {
   const [buscador, setBuscador] = useState(false)
 
   const navigate = useNavigate();
+  const { auth } = useAuth()
 
   useEffect(() => {
     const obtenerProyectos = async () => {
@@ -40,7 +43,7 @@ const ProyectosProvider = ({ children }) => {
       }
     };
     obtenerProyectos()
-  }, [])
+  }, [auth])
 
   useEffect(() => {
     socket = io(import.meta.env.VITE_BACKEND_URL)
@@ -60,7 +63,6 @@ const ProyectosProvider = ({ children }) => {
     } else {
       await nuevoProyecto(proyecto)
     }
-
   }
 
   const editarProyecto = async proyecto => {
@@ -77,17 +79,15 @@ const ProyectosProvider = ({ children }) => {
       }     
 
       const { data } = await clienteAxios.put(`/proyectos/${proyecto.id}`, proyecto, config)
+
       //Sincronizar el state
       const proyectosActualizados = proyectos.map(proyectoState => proyectoState._id === data._id ? data : proyectoState)
       setProyectos(proyectosActualizados)
-
       //Mostrar la alerta
-
       setAlerta({
         msg: "Proyecto Actualizado Correctamente",
         error: false,
       });
-
       //Redireccionar
       setTimeout(() => {
         setAlerta({});
@@ -449,6 +449,12 @@ const ProyectosProvider = ({ children }) => {
     proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState => tareaState._id === tarea._id ? tarea : tareaState)
   }*/}
 
+  const cerrarSesionProyectos = () => {
+    setProyectos([])
+    setProyecto({})
+    setAlerta({})
+  }
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -480,7 +486,8 @@ const ProyectosProvider = ({ children }) => {
         submitTareasProyecto,
         //eliminarTareaProyecto,
         //actualizarTareaProyecto,
-        //cambiarEstadoTarea
+        //cambiarEstadoTarea,
+        cerrarSesionProyectos
       }}
     >
       {children}

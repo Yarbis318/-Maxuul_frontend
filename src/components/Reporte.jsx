@@ -1,11 +1,12 @@
 import { formatearFecha } from "../helpers/formatearFecha"
 import useServicios from "../hooks/useServicios"
-import useAdmin from "../hooks/useAdmin"
+import useAdminServ from "../hooks/useAdminServ"
 
 const Reporte = ({ reporte }) => {
+
   const { handleModalEditarReporte, handleModalEliminarReporte, completarReporte } = useServicios()
 
-  const admin = useAdmin()
+  const admin = useAdminServ()
 
   const {
     nombreservicio,
@@ -43,50 +44,39 @@ const Reporte = ({ reporte }) => {
         <p className="mb-2 text-xl  uppercase">Numero de escaleras: <strong>{numeroescaleras}</strong></p>
         <p className="mb-2 text-xl  uppercase">Vasos comunicantes: <strong>{vasoscomunicantes}</strong></p>
         <p className="mb-2 text-xl  uppercase">Observaciones: <strong>{observaciones}</strong></p>
+        <p className="mb-2 text-xl uppercase">Estado: <strong className="text-green-400">{estado}</strong></p>
+        <p className="mb-1 text-lg text-gray-600">Creada: {formatearFecha(createdAt)}</p>
+        <p className="mb-1 text-lg text-blue-600">Actualizada: {formatearFecha(updatedAt)}</p>
 
-        <p className="mb-1 text-lg text-gray-600">
-          Creada: {formatearFecha(createdAt)}
-        </p>
-        <p className="mb-1 text-lg text-blue-600">
-          Actualizada: {formatearFecha(updatedAt)}
-        </p>
+        { completado&& <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">Completado por: {reporte.completado.nombre}</p> }
 
-        {/*{ estado && <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">Completada por: {reporte.completado.nombre}</p> }
-
-        { completado && <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">Completada por: {reporte.completado.nombre}</p> }*/}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-2">
-        {/*<button
-          className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-          onClick={() => handleModalEditarReporte(reporte)}
-        >
-          Editar
-        </button>*/}
+        {admin && (
+          <button
+            className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
+            onClick={() => handleModalEditarReporte}
+          >
+            Editar
+          </button>
 
-        {status ? (
-
-        <button
-          className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-        >
-          Completa
-        </button>
-        ) : (
-
-        <button
-          className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-        >
-          Incompleta
-        </button>
         )}
 
+          <button
+            className={`${status ? 'bg-sky-600' : 'bg-gray-600'} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+            onClick={() => completarReporte(_id)}
+          >{status ? 'Completado' : 'Incompleto'}
+          </button>
 
-        <button
-          className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-          onClick={() => handleModalEliminarReporte(reporte)}
-        >
-          Eliminar
-        </button>
+        {admin && (
+          <button
+            className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
+            onClick={() => handleModalEliminarReporte(reporte)}
+          >
+            Eliminar
+          </button>
+        )}
       </div>
     </div>
   )

@@ -21,7 +21,6 @@ const ModalFormularioReporte = () => {
   const [numeroescaleras, setNumeroescaleras] = useState("")
   const [vasoscomunicantes, setVasoscomunicantes] = useState("")
   const [observaciones, setObservaciones] = useState("")
-  const [status, setStatus] = useState("")
   const [estado, setEstado] = useState("")
 
   const params = useParams()
@@ -50,7 +49,6 @@ const ModalFormularioReporte = () => {
       setNumeroescaleras(reporte.numeroescaleras)
       setVasoscomunicantes(reporte.vasoscomunicantes)
       setObservaciones(reporte.observaciones)
-      setStatus(reporte.status)
       setEstado(reporte.estado)
       return
     }
@@ -67,14 +65,13 @@ const ModalFormularioReporte = () => {
     setNumeroescaleras('')
     setVasoscomunicantes('')
     setObservaciones('')
-    setStatus('')
     setEstado('')
   }, [reporte])
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    if([ nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, status, estado].includes('')) {
+    if([ nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, estado].includes('')) {
       mostrarAlerta({
         msg: "Todos los campos son obligatorios",
         error: true,
@@ -82,7 +79,7 @@ const ModalFormularioReporte = () => {
       return
     }
 
-    await submitReporte({ id, nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, status, estado, servicio: params.id })
+    await submitReporte({ id, nombreservicio, sedimento, objetos, piso, paredes, techo, succiones, numerosucciones, escaleras, numeroescaleras, vasoscomunicantes, observaciones, estado, servicio: params.id })
 
     setId('')
     setNombreservicio('')
@@ -97,7 +94,6 @@ const ModalFormularioReporte = () => {
     setNumeroescaleras('')
     setVasoscomunicantes('')
     setObservaciones('')
-    setStatus('')
     setEstado('')
   }
 

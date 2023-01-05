@@ -43,19 +43,24 @@ const AuthProvider = ({ children }) => {
     autenticarUsuario()
   }, [])
 
+  const cerrarSesionAuth = () => {
+    setAuth({})
+  }
+
   return (
     <AuthContext.Provider
       value={{
         auth,
         setAuth,
-        cargando
+        cargando,
+        cerrarSesionAuth
       }}
     >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export { AuthProvider };
+export { AuthProvider }
 
-export default AuthContext;
+export default AuthContext

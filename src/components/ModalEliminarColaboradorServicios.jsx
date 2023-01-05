@@ -2,16 +2,16 @@ import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import useServicios from "../hooks/useServicios"
 
-const ModalEliminarReporte = () => {
+const modalEliminarColaboradorServicios = () => {
 
-  const { modalEliminarReporte, handleModalEliminarReporte, eliminarReporte } = useServicios()
+  const {handleModalEliminarColaboradorServicios, modalEliminarColaboradorServicios, eliminarColaboradorServicios} = useServicios()
 
   return (
-    <Transition.Root show={modalEliminarReporte} as={Fragment}>
+    <Transition.Root show={modalEliminarColaboradorServicios} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={handleModalEliminarReporte}
+        onClose={handleModalEliminarColaboradorServicios}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -48,7 +48,7 @@ const ModalEliminarReporte = () => {
                 <button
                   type="button"
                   className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={handleModalEliminarReporte}
+                  onClick={handleModalEliminarColaboradorServicios}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -86,11 +86,11 @@ const ModalEliminarReporte = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Eliminar Reporte
+                    Eliminar Colaborador
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Un reporte eliminado no se podrá recuperar
+                      Una vez eliminada, esta persona no podrá acceder al proyecto
                     </p>
                   </div>
                 </div>
@@ -99,15 +99,17 @@ const ModalEliminarReporte = () => {
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={eliminarReporte}
+                  onClick={eliminarColaboradorServicios}
                 >
                   Eliminar
                 </button>
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={handleModalEliminarReporte}
-                > Cancelar
+                    onClick={handleModalEliminarColaboradorServicios}
+                >
+                  {/*{" "}*/}
+                  Cancelar
                 </button>
               </div>
             </div>
@@ -115,7 +117,7 @@ const ModalEliminarReporte = () => {
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }
 
-export default ModalEliminarReporte
+export default modalEliminarColaboradorServicios

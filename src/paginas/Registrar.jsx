@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import Alerta from "../components/Alerta"
 import clienteAxios from "../config/clienteAxios"
+import Logotipo from '../components/Logo'
 
 const Registrar = () => {
   
@@ -66,9 +67,9 @@ const Registrar = () => {
 
   return (
     <>
-      <h1 className="text-sky-600 font-black text-6xl capitalize">
+      <h1 className="text-green-600 font-extralight text-6xl capitalize">
         Crea tu Cuenta en {""}
-        <span className="text-slate-700"> TsooL</span>
+        <Logotipo />
       </h1>
 
       { msg && <Alerta alerta={alerta} />}
@@ -149,7 +150,7 @@ const Registrar = () => {
         <input
           type="submit"
           value="Crear Cuenta"
-          className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded-xl hover:cursor-pointer hover:bg-sky-800 transition-colors"
+          className="bg-green-600 mb-5 w-full py-3 text-white uppercase font-bold rounded-xl hover:cursor-pointer hover:bg-green-800 transition-colors"
         />
       </form>
       <nav className="lg:flex lg:justify-between">
